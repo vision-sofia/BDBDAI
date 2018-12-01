@@ -12,16 +12,36 @@
     crossorigin=""></script>
     <script src="heatmap.min.js"></script>
     <script src="leaflet-heatmap.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="jquery-ui.min.js"></script>
     <title>MAPS</title>
     <style>
+            @import url('https://fonts.googleapis.com/css?family=Oswald');
+            </style>
+   <style>
+        
     body, html, #mapid { 
         height: 100%;
         margin: 0; 
     }
+    #tags{
+        position: absolute;
+        top:10px;
+        left: 100px;
+        z-index: 1000;
+    }
+    .popup a{
+        font-size: 15px;
+        font-family: 'Oswald', sans-serif;
+        color: black;
+    }
+    .ui-autocomplete { position: absolute; cursor: default;z-index:1000 !important;} 
     </style>
 </head>
 <body>
+        <input id="tags">
         <div id="mapid"></div>
-    <script src="main.js"></script>
+        <script src="main.js"></script>
 </body>
 </html>
