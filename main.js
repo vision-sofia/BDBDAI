@@ -16,16 +16,15 @@
     
 
     
-    // L.marker([51.5, -0.09]).addTo(map)
-    //     .bindPopup('A pretty CSS3 popup.<br> Easily customizable.')
-    //     .openPopup();
+    
     
     var cfg = {
         // radius should be small ONLY if scaleRadius is true (or small radius is intended)
         // if scaleRadius is false it will be the constant radius used in pixels
-        "radius": .01,
-        "blur" : .5,
+        "radius": .005,
+        "blur" : .1,
         "maxOpacity": .6, 
+        "gradient":{"0":"red","1":"lightgreen"},
         // scales the radius based on map zoom
         "scaleRadius": true, 
         // if set to false the heatmap uses the global maximum for colorization
@@ -46,28 +45,40 @@ var heatmapLayer = new HeatmapOverlay(cfg);
     
 
 //L.CRS.Earth
-var map = L.map('mapid',{crs: L.CRS.EPSG3857,layers: [heatmapLayer]}).setView([43.229642, 28.014062], 13);
+var map = L.map('mapid',{crs: L.CRS.EPSG3857,layers: [heatmapLayer]}).setView([42.66044444444444, 23.39877777777778], 13);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
   }).addTo(map);
 
+  let pin = L.icon({
+    iconUrl: 'leaf-green.png'});
 
     fetch("output.json")
     .then(e=>e.json())
     .then(json=>{
         var [array] = json; 
-        array = array.records
+        array = array.records.map(elToPoint);
         console.log(array);
         var data = {
-            max:10,
-            data : array.map(elToPoint)
+            max:20,
+            data : array
         };
-        
 
         console.log(data)
         heatmapLayer.setData(data);
         
-    
+        for (var a=0;a<array.length;a++){
+            let e = array[a];
+            if (!e.lng || !e.lat){
+                console.log("error",e);
+                continue;
+            }
+            L.marker([e.lat,e.lng],{icon:pin}).addTo(map)
+            .bindPopup('A pretty CSS3 popup.<br> Easily customizable.')
+            .openPopup();
+        }
     
     });
         
+
+    
